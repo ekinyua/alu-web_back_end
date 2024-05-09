@@ -2,6 +2,8 @@
 """
     Module with Python variable annotations
 """
+
+
 def add(a: float, b:float) -> float:
         """
             Args:
@@ -12,6 +14,6 @@ def add(a: float, b:float) -> float:
                 Sum of two floats
 
         """
-    
+
     
         return a + b

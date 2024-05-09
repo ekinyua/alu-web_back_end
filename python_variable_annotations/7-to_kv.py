@@ -12,7 +12,7 @@ def to_kv(k: str, v: Union[int, float]) -> Tuple[str, float]:
             v: Union: Can either be an int or a float
 
         Return:
-            Tuple with string as first element and square of int or float as second element, annotated as a float
+            Tuple with string as first element and square of int or float
     """
 
     cncat: Tuple(str, Union[int, float])

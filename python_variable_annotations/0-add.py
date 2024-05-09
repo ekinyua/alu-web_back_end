@@ -1,4 +1,17 @@
 #!/usr/bin/env python3
-
+"""
+    Module with Python variable annotations
+"""
 def add(a: float, b:float) -> float:
-    return a + b
+        """
+            Args:
+                a: The first parameter
+                b: The second parameter
+
+            Return:
+                Sum of two floats
+
+        """
+    
+    
+        return a + b

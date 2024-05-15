@@ -6,8 +6,8 @@
 from base_caching import BaseCaching
 
 
-class LIFOCache(BaseCaching):
-    """ LIFOCache define a FIFO algorithm to use cache
+class LRUCache(BaseCaching):
+    """ LRUCache define a LRU algorithm to use cache
 
       To use:
       >>> my_cache = BasicCache()
@@ -18,26 +18,30 @@ class LIFOCache(BaseCaching):
       >>> my_cache.print_cache()
       A: Hello
 
-      >>> print(my_cache.get("A"))
-      Hello
-
       Ex:
-      >>> print(self.cache_data)
-      {A: "Hello", B: "World", C: "Holberton", D: "School"}
-      >>> my_cache.put("C", "Street")
-      >>> print(self.cache_data)
-      {A: "Hello", B: "World", D: "School",  C: "Street"}
-
-      >>> my_cache.put("F", "COD")
-      DISCARD: C
-      >>> print(self.cache_data)
-      {F: "COD", B: "World", D: "School", F, "COD"}
+      >>> my_cache.print_cache()
+      Current cache:
+      A: Hello
+      B: World
+      C: Holberton
+      D: School
+      >>> print(my_cache.get("B"))
+      World
+      >>> my_cache.put("E", "Battery")
+      DISCARD: A
+      >>> my_cache.print_cache()
+      Current cache:
+      B: World
+      C: Holberton
+      D: School
+      E: Battery
     """
 
     def __init__(self):
         """ Initiliaze
         """
         super().__init__()
+        self.leastrecent = []
 
     def put(self, key, item):
         """
@@ -52,15 +56,19 @@ class LIFOCache(BaseCaching):
             # Make a new
             if valuecache is None:
                 if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
-                    keydel = list(self.cache_data.keys())
-                    lenlast = len(keydel) - 1
-                    del self.cache_data[keydel[lenlast]]
-                    print("DISCARD: {}".format(keydel[lenlast]))
-            # If it's None this del the key and after update the same key
-            # If it's wrong fix eliminate and ask
+                    keydel = self.leastrecent
+                    lendel = len(keydel) - 1
+                    del self.cache_data[keydel[lendel]]
+                    print("DISCARD: {}".format(self.leastrecent.pop()))
             else:
                 del self.cache_data[key]
-            # Modify value
+
+            if key in self.leastrecent:
+                self.leastrecent.remove(key)
+                self.leastrecent.insert(0, key)
+            else:
+                self.leastrecent.insert(0, key)
+
             self.cache_data[key] = item
 
     def get(self, key):
@@ -73,6 +81,10 @@ class LIFOCache(BaseCaching):
             Return:
                 value of the key
         """
-
         valuecache = self.cache_data.get(key)
+
+        if valuecache:
+            self.leastrecent.remove(key)
+            self.leastrecent.insert(0, key)
+
         return valuecache

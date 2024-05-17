@@ -25,7 +25,7 @@ class Server:
                 reader = csv.reader(f)
                 dataset = [row for row in reader]
             self.__dataset = dataset[1:]
-            
+
         return self.__dataset
 
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
@@ -36,7 +36,7 @@ class Server:
         indices = index_range(page, page_size)
         start = indices[0]
         end = indices[1]
-        
+
         try:
             return self.dataset()[start:end]
         except IndexError:

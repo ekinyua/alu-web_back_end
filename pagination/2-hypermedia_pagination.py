@@ -1,4 +1,4 @@
-#!/usr/bin/evn python3
+#!/usr/bin/env python3
 
 """Method that takes same arguments as get_page
 and returns a dictionary"""

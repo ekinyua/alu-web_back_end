@@ -22,14 +22,14 @@ class Server:
                 render = csv.reader(f)
                 dataset = [row for row in render]
             self.__dataset = dataset[1:]
-     
+
         return self.__dataset
 
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
         """Dataset output page"""
         assert isinstance(page, int) and isinstance(page_size, int)
         assert page > 0 and page_size > 0
-  
+
         indices = index_range(page, page_size)
         start = indices[0]
         end = indices[1]

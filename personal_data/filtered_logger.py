@@ -47,6 +47,27 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         database=db_name)
 
 
+def main():
+    """
+    Retrieves all rows from the 'users' table and displays them in the desired format.
+    """
+    conn = get_db()
+    if conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users")
+        field_names = [i[0] for i in cursor.description]
+        rows = cursor.fetchall()
+        
+        logger = get_logger()
+        
+        for row in rows:
+            str_row = ''.join(f'{f}={str(r)}; ' for r, f in zip(row, field_names))
+            logger.info(str_row.strip())
+        
+        cursor.close()
+        conn.close()         
+
+
 class RedactingFormatter(logging.Formatter):
     """Redacting Formatter class"""
     REDACTION = "***"
@@ -62,3 +83,8 @@ class RedactingFormatter(logging.Formatter):
         return filter_datum(self.fields, self.REDACTION,
                             super(RedactingFormatter, self).format(record),
                             self.SEPARATOR)
+
+
+
+if __name__ == "__main__":
+    main()

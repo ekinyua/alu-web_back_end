@@ -10,6 +10,7 @@ import mysql.connector
 
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
 
+
 def filter_datum(fields: List[str],
                  redaction: str,
                  message: str,
@@ -19,6 +20,7 @@ def filter_datum(fields: List[str],
         message = re.sub(f'{field}=.*?{separator}',
                          f'{field}={redaction}{separator}', message)
     return message
+
 
 def get_logger() -> logging.Logger:
     """ Returns a Logger Object """

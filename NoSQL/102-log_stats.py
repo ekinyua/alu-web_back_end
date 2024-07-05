@@ -1,13 +1,6 @@
+
 #!/usr/bin/env python3
-"""
-Provide some stats about Nginx logs stored in MongoDB
-Database: logs, Collection: nginx, Display same as example
-first line: x logs, x number of documents in this collection
-second line: Methods
-5 lines with method = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-one line with method=GET, path=/status
-improve by adding top 10 most present IPs in collection nginx
-database logs
+"""log stats from collection
 """
 from pymongo import MongoClient
 
@@ -18,9 +11,7 @@ PIPE = [{"$group": {"_id": "$ip", "count": {"$sum": 1}}},
 
 
 def log_stats(mongo_collection, option=None):
-    """
-    Prototype: def log_stats(mongo_collection, option=None):
-    Provide some stats about Nginx logs stored in MongoDB
+    """ script that provides some stats about Nginx logs stored in MongoDB
     """
     items = {}
     if option:

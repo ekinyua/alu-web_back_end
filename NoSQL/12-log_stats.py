@@ -1,32 +1,28 @@
 #!/usr/bin/env python3
-"""python scripts"""
+"""Provides stats about Nginx logs stored in MongoDB"""
 from pymongo import MongoClient
-from os import getenv
 
-METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"]
+def log_stats():
+    """Calculate and display stats about Nginx logs"""
+    client = MongoClient('mongodb://127.0.0.1:27017')
+    nginx_collection = client.logs.nginx
 
-def log_stats(mongo_collection, option=None):
-    """ script that provides some stats about Nginx logs stored in MongoDB
-    """
-    if option:
-        value = mongo_collection.count_documents(
-            {"method": option})
-        print(f"\tmethod {option}: {value}")
-        return
+    # Total logs
+    total_logs = nginx_collection.count_documents({})
+    print(f"{total_logs} logs")
 
-    result = mongo_collection.count_documents({})
-    print(f"{result} logs")
+    # Methods stats
     print("Methods:")
-    for method in METHODS:
-        log_stats(mongo_collection, method)
-    status_check = mongo_collection.count_documents({"method": "GET", "path": "/status"})
+    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    for method in methods:
+        count = nginx_collection.count_documents({"method": method})
+        print(f"    method {method}: {count}")
+
+    # Status check
+    status_check = nginx_collection.count_documents(
+        {"method": "GET", "path": "/status"}
+    )
     print(f"{status_check} status check")
 
 if __name__ == "__main__":
-    try:
-        mongo_url = getenv("MONGO_URL", "mongodb://127.0.0.1:27017")
-        client = MongoClient(mongo_url)
-        nginx_collection = client.logs.nginx
-        log_stats(nginx_collection)
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    log_stats()
